@@ -1,95 +1,52 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import { useEffect, useState } from 'react';
+import Titulo from'./components/Titulo/Titulo'
+import Subtitulo from './components/Subtitulo/Subtitulo'; 
+import Bandera from './components/Bandera/Bandera';
+import Input from './components/Input/Input';
+
+export default function CountryFlagGame() {
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [feedback, setFeedback] = useState('');
+
+  useEffect(() => {
+      const fetchCountries = async () => {
+          try {
+              const response = await fetch('https://countriesnow.space/api/v0.1/countries/flag/images');
+              const data = await response.json();
+              setCountries(data.data);
+
+              const randomCountry = data.data[Math.floor(Math.random() * data.data.length)];
+              setSelectedCountry(randomCountry);
+          } catch (error) {
+              console.error('Error fetching countries:', error);
+          }
+      };
+
+      fetchCountries();
+  }, []);
+
+  const handleSubmit = (userGuess) => {
+      if (selectedCountry && userGuess.toLowerCase() === selectedCountry.name.toLowerCase()) {
+          setFeedback('¡Correcto! Has adivinado la bandera.');
+      } else {
+          setFeedback('Lo siento, intenta de nuevo.');
+      }
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+      <div>
+          <Titulo text="Adivina la Bandera del País" />
+          <Subtitulo text="¿Puedes adivinar a qué país pertenece esta bandera?" />
+          {selectedCountry && (
+              <>
+                  <Bandera url={selectedCountry.flag} alt={`Flag of ${selectedCountry.name}`} />
+                  <Input onSubmit={handleSubmit} />
+                  {feedback && <p style={{ textAlign: 'center', marginTop: '20px' }}>{feedback}</p>}
+              </>
+          )}
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
   );
 }
