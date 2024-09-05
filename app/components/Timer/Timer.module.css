@@ -1,0 +1,31 @@
+/* components/Timer/Timer.module.css */
+
+.Container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f8;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    width: 300px;
+    margin: 20px auto;
+}
+
+.text {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.TimerCircle {
+    font-size: 2.5em;
+    color: #34495e;
+    font-weight: bold;
+}
